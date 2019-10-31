@@ -36,8 +36,8 @@ public class Graph {
      *
      * @param traverseFunction function to be applied on every vertex in the graph
      */
-    public void traverseWholeGraphWithFunction(Consumer<Vertex> traverseFunction) {
-        depthFirstTraversal(root, null, traverseFunction);
+    public void traverseWholeGraphWithFunction(Consumer<Vertex> traverseFunction) throws TraverseException {
+        breadthFirstTraversal(root, null, traverseFunction);
     }
 
     /**
@@ -46,8 +46,8 @@ public class Graph {
      * @param vertex2
      * @return the path from one vertex to another if one exists
      */
-    public List<Vertex> getPath(Vertex vertex1, Vertex vertex2) {
-        return depthFirstTraversal(vertex1, vertex2, null);
+    public List<Vertex> getPath(Vertex vertex1, Vertex vertex2) throws TraverseException {
+        return breadthFirstTraversal(vertex1, vertex2, null);
     }
 
     public void addVertex(Vertex vertex) {
@@ -90,7 +90,7 @@ public class Graph {
     }
 
     /**
-     * Traverses over the graph with depth-first-search algorithm.
+     * Traverses over the graph with breadth-first-search algorithm.
      *
      * @param root of our walk through the graph. For traversal method it would be root of the graph.
      *             For getPath method it would be vertexFrom.
@@ -99,7 +99,7 @@ public class Graph {
      *                         null otherwise.
      * @return list of vertexes if we need a path. empty list for traversal.
      */
-    private List<Vertex> depthFirstTraversal(Vertex root, Vertex destination, Consumer<Vertex> traverseFunction) {
+    private List<Vertex> breadthFirstTraversal(Vertex root, Vertex destination, Consumer<Vertex> traverseFunction) throws TraverseException{
         Set<Vertex> visited = new HashSet<>();
         Map<Vertex, Vertex> vertexParentMap = new HashMap<>();
         Queue<Vertex> queue = new LinkedList<>();
@@ -113,7 +113,8 @@ public class Graph {
                     return buildEdgePathFromParentMap(vertexParentMap, destination);
                 }
             } catch (Exception ex) {
-                log.throwing(this.getClass().getName(), "depthFirstTraversal", ex);
+                log.throwing(this.getClass().getName(), "breadthFirstTraversal", ex);
+                throw new TraverseException();
             }
 
             for (Vertex v : getAdjVertices(vertex)) {
